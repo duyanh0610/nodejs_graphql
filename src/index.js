@@ -1,4 +1,8 @@
-import { AddressSchema } from "./schema/Address";
-import { UserSchema } from "./schema/user";
+const express = require('express');
+const dotenv = require('dotenv');
 
-export default { UserSchema, AddressSchema }
+dotenv.config();
+const app = express();
+const port = process.env.SERVER_PORT || 3000;
+
+app.listen(port, () => console.log(`Listening on port ${port}`));
