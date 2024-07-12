@@ -1,4 +1,4 @@
-import { AddressSchema } from "./schema/Address";
-import { UserSchema } from "./schema/user";
+import UserSchema  from './user-schema.js';
+import AddressSchema from './address-schema.js';
 
-export default { UserSchema, AddressSchema }
+export default [UserSchema, AddressSchema]
