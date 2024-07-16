@@ -24,6 +24,29 @@ async function main() {
     ],
   });
 
+  const productInitialization = await prisma.product.createMany({
+    data: [
+      {
+        name: "product 1",
+        description: "product 1 description",
+        price: 100,
+        image: "image 1",
+      },
+      {
+        name: "product 2",
+        description: "product 2 description",
+        price: 200,
+        image: "image 2",
+      },
+      {
+        name: "product 3",
+        description: "product 3 description",
+        price: 300,
+        image: "image 3",
+      },
+    ],
+  });
+
   const userInitialization = await prisma.user.createMany({
     data: [
       {
@@ -42,6 +65,19 @@ async function main() {
         name: "Duy Anh2",
         email: "anhvdd2@hblab.vn",
         password: "123456",
+        addressId: 2,
+      },
+    ],
+  });
+
+  const orderInitialization = await prisma.order.createMany({
+    data: [
+      {
+        userId: 1,
+        addressId: 1,
+      },
+      {
+        userId: 2,
         addressId: 2,
       },
     ],

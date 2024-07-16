@@ -1,9 +1,14 @@
-import prisma from "../db/prisma.js";
+import prisma from "../../db/prisma.js";
 const UserResolver = {
   Query: {
     findUsers: async () => {
       try {
-        return await prisma.user.findMany({ include: { address: true } });
+        // const result = await prisma.$queryRaw`SELECT * FROM "User"`;
+        const result = await prisma.user.findMany({
+          take: 2,
+          skip: 0,
+        });
+        return result;
       } catch (error) {
         console.log("🚀 ~ findUsers:async ~ error:", error);
       }
@@ -19,6 +24,8 @@ const UserResolver = {
   Mutation: {
     createUser: async (_, { input }) => {
       try {
+        const result = await prisma.$queryRaw;
+
         return await prisma.user.create({ data: input });
       } catch (error) {
         console.log("🚀 ~ createUser:async ~ error:", error);
@@ -42,6 +49,7 @@ const UserResolver = {
       }
     },
   },
+  Subscription: {},
 };
 
 export default UserResolver;

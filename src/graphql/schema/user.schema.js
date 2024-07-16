@@ -25,5 +25,11 @@ const UserSchema = gql`
     editUser(id: ID!, input: UserInput): User
     deleteUser(id: ID!): User
   }
+
+  type Subscription {
+    newUser: User
+    editUser: User
+    deleteUser: User
+  }
 `;
 export default UserSchema;
