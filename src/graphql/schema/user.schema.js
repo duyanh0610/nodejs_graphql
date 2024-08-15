@@ -27,9 +27,9 @@ const UserSchema = gql`
   }
 
   type Subscription {
-    newUser: User
-    editUser: User
-    deleteUser: User
+    newUser(id: ID): User
+    editUser(id: ID): User
+    deleteUser(id: ID): User
   }
 `;
 export default UserSchema;

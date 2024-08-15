@@ -1,7 +1,11 @@
+import { subscribe } from "graphql";
 import prisma from "../../db/prisma.js";
+import { PubSub } from "graphql-subscriptions";
+
+const pubSub = new PubSub();
 const UserResolver = {
   Query: {
-    findUsers: async () => {
+    findUsers: async (root, args, context, info) => {
       try {
         // const result = await prisma.$queryRaw`SELECT * FROM "User"`;
         const result = await prisma.user.findMany({
@@ -24,9 +28,16 @@ const UserResolver = {
   Mutation: {
     createUser: async (_, { input }) => {
       try {
-        const result = await prisma.$queryRaw;
+        const result = await prisma.user
+          .create({ data: input })
+          .then((result) => {
+            const newAddedUser = { ...result._doc };
 
-        return await prisma.user.create({ data: input });
+            pubSub.publish("NEW_USER", { newAddedUser });
+
+            return newAddedUser;
+          });
+        return result;
       } catch (error) {
         console.log("🚀 ~ createUser:async ~ error:", error);
       }
@@ -49,7 +60,34 @@ const UserResolver = {
       }
     },
   },
-  Subscription: {},
+  Subscription: {
+    newUser: {
+      resolve: (payload) => {
+        return payload.newAddedUser;
+      },
+      subscribe: () => {
+        return pubSub.asyncIterator("NEW_USER");
+      },
+    },
+
+    editUser: {
+      resolve: (payload) => {
+        return payload.editedUser;
+      },
+      subscribe: () => {
+        return pubSub.asyncIterator("EDIT_USER");
+      },
+    },
+
+    deleteUser: {
+      resolve: (payload) => {
+        return payload.deletedUser;
+      },
+      subscribe: () => {
+        return pubSub.asyncIterator("DELETE_USER");
+      },
+    },
+  },
 };
 
 export default UserResolver;
